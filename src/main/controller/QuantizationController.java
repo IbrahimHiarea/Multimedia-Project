@@ -2,17 +2,27 @@ package main.controller;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
 public class QuantizationController implements Initializable {
+
+    private Stage stage;
+    private Scene scene;
+    private Parent root;
 
     @FXML
     private ImageView imageView;
@@ -22,6 +32,8 @@ public class QuantizationController implements Initializable {
 
     private String[] algorithms = {"Octree" , "Median Cut" , "K-Means"};
 
+    private String imagePath = "";
+
     public void selectImage(ActionEvent event) {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setInitialDirectory(new File ("C:\\Users\\ASUS\\Desktop\\University\\4-Th Year\\Chapter 2\\Multimedia\\multimedia-project\\src\\main\\resources\\img"));
@@ -30,8 +42,8 @@ public class QuantizationController implements Initializable {
         File file = fileChooser.showOpenDialog(null);
 
         if (file != null){
-            Image image = new Image(file.getPath());
-            System.out.println(file.getPath());
+            imagePath = file.getPath();
+            Image image = new Image(imagePath);
             imageView.setImage(image);
         } else {
             System.out.println("NO File");
@@ -42,5 +54,29 @@ public class QuantizationController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         algorithm.setValue("Octree");
         algorithm.getItems().addAll(algorithms);
+    }
+
+    public void submit(ActionEvent event) throws IOException {
+        if(imageView.getImage() != null){
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/main/resources/fxml/QuantizationResult.fxml"));
+            root = loader.load();
+            QuantizationResultController quantizationResultController = loader.getController();
+
+            if(algorithm.getValue() == "Octree"){
+                quantizationResultController.Octree(imagePath);
+
+            } else if(algorithm.getValue() == "Median Cut"){
+                quantizationResultController.Median(imagePath);
+            } else {
+                quantizationResultController.Means(imagePath);
+            }
+
+            stage = (Stage) ((Node)event.getSource()).getScene().getWindow();
+            scene = new Scene(root);
+            stage.setScene(scene);
+            stage.show();
+        } else {
+            System.out.println("Please Select Image First");
+        }
     }
 }

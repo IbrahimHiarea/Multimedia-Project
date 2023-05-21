@@ -26,7 +26,7 @@
             <Font size="14.0" />
          </font>
       </Label>
-      <Button layoutX="528.0" layoutY="427.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="120.0" style="-fx-background-color: #005757;" text="Submit" textAlignment="CENTER" textFill="WHITE">
+      <Button layoutX="528.0" layoutY="427.0" mnemonicParsing="false" onAction="#submit" prefHeight="40.0" prefWidth="120.0" style="-fx-background-color: #005757;" text="Submit" textAlignment="CENTER" textFill="WHITE">
          <cursor>
             <Cursor fx:constant="HAND" />
          </cursor>
