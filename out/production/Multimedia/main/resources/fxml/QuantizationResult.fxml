@@ -18,7 +18,7 @@
             <Cursor fx:constant="HAND" />
          </cursor>
       </Button>
-      <Button layoutX="347.0" layoutY="499.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="120.0" style="-fx-background-color: #9900cc;" text="Indexed Image" textAlignment="CENTER" textFill="WHITE">
+      <Button layoutX="347.0" layoutY="499.0" mnemonicParsing="false" onAction="#IndexedImage" prefHeight="40.0" prefWidth="120.0" style="-fx-background-color: #9900cc;" text="Indexed Image" textAlignment="CENTER" textFill="WHITE">
          <cursor>
             <Cursor fx:constant="HAND" />
          </cursor>

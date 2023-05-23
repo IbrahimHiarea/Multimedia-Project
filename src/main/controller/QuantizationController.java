@@ -36,7 +36,7 @@ public class QuantizationController implements Initializable {
 
     public void selectImage(ActionEvent event) {
         FileChooser fileChooser = new FileChooser();
-        fileChooser.setInitialDirectory(new File ("C:\\Users\\ASUS\\Desktop\\University\\4-Th Year\\Chapter 2\\Multimedia\\multimedia-project\\src\\main\\resources\\img"));
+        fileChooser.setInitialDirectory(new File ("C:\\Users\\Twfek Ajeneh\\Pictures\\Background"));
         FileChooser.ExtensionFilter imageFilter = new FileChooser.ExtensionFilter("Image Files", "*.jpg", "*.png");
         fileChooser.getExtensionFilters().add(imageFilter);
         File file = fileChooser.showOpenDialog(null);

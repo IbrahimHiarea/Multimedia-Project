@@ -11,6 +11,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import main.algorithms.IndexedImage.ImageConverter;
 import main.algorithms.floydSteinberg.FloydSteinberg;
 import main.algorithms.octree.Quantize;
 
@@ -18,6 +19,8 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 import static main.algorithms.floydSteinberg.FloydSteinberg.applyDitheredPalette;
 
@@ -82,7 +85,7 @@ public class QuantizationResultController {
         Image image = imageView.getImage();
         if(image != null){
             FileChooser fileChooser = new FileChooser();
-            fileChooser.setInitialDirectory(new File ("C:\\Users\\ASUS\\Desktop\\University\\4-Th Year\\Chapter 2\\Multimedia\\multimedia-project\\src\\main\\resources\\img"));
+            fileChooser.setInitialDirectory(new File ("C:\\Users\\Twfek Ajeneh\\Downloads"));
             FileChooser.ExtensionFilter imageFilter = new FileChooser.ExtensionFilter("Image Files", "*.jpg", "*.png");
             fileChooser.getExtensionFilters().add(imageFilter);
             File file = fileChooser.showSaveDialog(null);
@@ -95,6 +98,17 @@ public class QuantizationResultController {
         } else {
             System.out.println("There is no Image");
         }
+    }
+
+    public void IndexedImage() throws  IOException{
+        Image image = imageView.getImage();
+        BufferedImage original = SwingFXUtils.fromFXImage(image, null);
+
+        ImageConverter converter = new ImageConverter();
+        // you can change the number of color you want;
+        BufferedImage indexedImage = converter.convertToIndexed(original , 256);
+        Image result = SwingFXUtils.toFXImage(indexedImage, null);
+        imageView.setImage(result);
     }
 
 }
