@@ -9,10 +9,17 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import main.algorithms.floydSteinberg.FloydSteinberg;
+import main.algorithms.octree.Quantize;
 
+import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
+
+import static main.algorithms.floydSteinberg.FloydSteinberg.applyDitheredPalette;
 
 public class QuantizationResultController {
 
@@ -23,15 +30,23 @@ public class QuantizationResultController {
     @FXML
     private ImageView imageView;
 
-    public void Octree(String imagePath) {
-
+    public void octree(String imagePath) {
+        Image image = new Image(imagePath);
+        Quantize quantization = new Quantize();
+        Image newImage = quantization.start(image);
+        imageView.setImage(newImage);
     }
 
-    public void Median(String imagePath) {
-
+    public void floydSteinberg(String imagePath) {
+        Image image = new Image(imagePath);
+        BufferedImage original = SwingFXUtils.fromFXImage(image, null);
+        FloydSteinberg floyed = new FloydSteinberg();
+        BufferedImage newImage = applyDitheredPalette(original, floyed.PALETTE);
+        Image result = SwingFXUtils.toFXImage(newImage, null);
+        imageView.setImage(result);
     }
 
-    public void Means(String imagePath) {
+    public void simple(String imagePath) {
         int MASK_0 = 0x00800000; // 0 bits per channel (except red)
         int MASK_1 = 0xff808080; // 1 bit per channel
         int MASK_2 = 0xffc0c0c0; // 2 bits per channel
@@ -62,4 +77,24 @@ public class QuantizationResultController {
         stage.setScene(scene);
         stage.show();
     }
+
+    public void save(ActionEvent event) throws IOException {
+        Image image = imageView.getImage();
+        if(image != null){
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.setInitialDirectory(new File ("C:\\Users\\ASUS\\Desktop\\University\\4-Th Year\\Chapter 2\\Multimedia\\multimedia-project\\src\\main\\resources\\img"));
+            FileChooser.ExtensionFilter imageFilter = new FileChooser.ExtensionFilter("Image Files", "*.jpg", "*.png");
+            fileChooser.getExtensionFilters().add(imageFilter);
+            File file = fileChooser.showSaveDialog(null);
+            ImageIO.write(SwingFXUtils.fromFXImage(image , null), "png", file);
+            root = FXMLLoader.load(getClass().getResource("/main/resources/fxml/Main.fxml"));
+            stage = (Stage) ((Node)event.getSource()).getScene().getWindow();
+            scene = new Scene(root);
+            stage.setScene(scene);
+            stage.show();
+        } else {
+            System.out.println("There is no Image");
+        }
+    }
+
 }

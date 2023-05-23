@@ -30,7 +30,7 @@ public class QuantizationController implements Initializable {
     @FXML
     private ChoiceBox<String> algorithm;
 
-    private String[] algorithms = {"Octree" , "Median Cut" , "K-Means"};
+    private String[] algorithms = {"Octree" , "Floyd Steinberg" , "Simple Algorithm"};
 
     private String imagePath = "";
 
@@ -63,12 +63,11 @@ public class QuantizationController implements Initializable {
             QuantizationResultController quantizationResultController = loader.getController();
 
             if(algorithm.getValue() == "Octree"){
-                quantizationResultController.Octree(imagePath);
-
-            } else if(algorithm.getValue() == "Median Cut"){
-                quantizationResultController.Median(imagePath);
+                quantizationResultController.octree(imagePath);
+            } else if(algorithm.getValue() == "Floyd Steinberg"){
+                quantizationResultController.floydSteinberg(imagePath);
             } else {
-                quantizationResultController.Means(imagePath);
+                quantizationResultController.simple(imagePath);
             }
 
             stage = (Stage) ((Node)event.getSource()).getScene().getWindow();
@@ -79,4 +78,5 @@ public class QuantizationController implements Initializable {
             System.out.println("Please Select Image First");
         }
     }
+
 }
