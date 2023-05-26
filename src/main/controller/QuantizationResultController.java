@@ -42,7 +42,6 @@ public class QuantizationResultController {
     private int[] greenHistogram = new int[256];
     private int[] blueHistogram = new int[256];
 
-
     @FXML
     private ListView colorPalette;
 
@@ -62,54 +61,7 @@ public class QuantizationResultController {
         imageView.setImage(newImage);
         originalImage.setImage(image);
         BufferedImage bufferedImage = SwingFXUtils.fromFXImage(newImage, null);
-        for (int y = 0; y < bufferedImage.getHeight(); y++) {
-            for (int x = 0; x < bufferedImage.getWidth(); x++) {
-                //Retrieving contents of a pixel
-                int pixel = bufferedImage.getRGB(x, y);
-                //Creating a Color object from pixel value
-                Color color = new Color(pixel, true);
-                redHistogram[color.getRed()]++;
-                greenHistogram[color.getGreen()]++;
-                blueHistogram[color.getBlue()]++;
-                palette.add(color);
-            }
-        }
-
-        colorPalette.setCellFactory(list -> new ListCell<Rectangle>() {
-            private final Pane pane = new Pane();
-
-            @Override
-            protected void updateItem(Rectangle item, boolean empty) {
-                super.updateItem(item, empty);
-
-                if (empty || item == null) {
-                    setGraphic(null);
-                } else {
-                    pane.getChildren().setAll(item);
-                    setGraphic(pane);
-                }
-            }
-        });
-        for(Color color : palette){
-            colorPalette.getItems().add(new Rectangle(270 , 30 , javafx.scene.paint.Color.rgb(color.getRed() , color.getGreen() , color.getBlue())));
-        }
-        XYChart.Series<Number, Number> redSeries = new XYChart.Series<>();
-        XYChart.Series<Number, Number> greenSeries = new XYChart.Series<>();
-        XYChart.Series<Number, Number> blueSeries = new XYChart.Series<>();
-
-        for(int i = 0; i < 255 ; i++){
-            redSeries.getData().add(new XYChart.Data<>(i , redHistogram[i]));
-            greenSeries.getData().add(new XYChart.Data<>(i, greenHistogram[i]));
-            blueSeries.getData().add(new XYChart.Data<>(i, blueHistogram[i]));
-
-        }
-        redSeries.setName("Red");
-        greenSeries.setName("Green");
-        blueSeries.setName("Blue");
-        histogramChart.getData().add(redSeries);
-        histogramChart.getData().add(blueSeries);
-        histogramChart.getData().add(greenSeries);
-
+        histogramAndColorPalette(bufferedImage);
     }
 
     public void floydSteinberg(String imagePath) {
@@ -120,53 +72,7 @@ public class QuantizationResultController {
         Image result = SwingFXUtils.toFXImage(newImage, null);
         imageView.setImage(result);
         originalImage.setImage(image);
-        for (int y = 0; y < newImage.getHeight(); y++) {
-            for (int x = 0; x < newImage.getWidth(); x++) {
-                //Retrieving contents of a pixel
-                int pixel = newImage.getRGB(x, y);
-                //Creating a Color object from pixel value
-                Color color = new Color(pixel, true);
-                redHistogram[color.getRed()]++;
-                greenHistogram[color.getGreen()]++;
-                blueHistogram[color.getBlue()]++;
-                palette.add(color);
-            }
-        }
-
-        colorPalette.setCellFactory(list -> new ListCell<Rectangle>() {
-            private final Pane pane = new Pane();
-
-            @Override
-            protected void updateItem(Rectangle item, boolean empty) {
-                super.updateItem(item, empty);
-
-                if (empty || item == null) {
-                    setGraphic(null);
-                } else {
-                    pane.getChildren().setAll(item);
-                    setGraphic(pane);
-                }
-            }
-        });
-        for(Color color : palette){
-            colorPalette.getItems().add(new Rectangle(270 , 30 , javafx.scene.paint.Color.rgb(color.getRed() , color.getGreen() , color.getBlue())));
-        }
-        XYChart.Series<Number, Number> redSeries = new XYChart.Series<>();
-        XYChart.Series<Number, Number> greenSeries = new XYChart.Series<>();
-        XYChart.Series<Number, Number> blueSeries = new XYChart.Series<>();
-
-        for(int i = 0; i < 255 ; i++){
-            redSeries.getData().add(new XYChart.Data<>(i, redHistogram[i]));
-            greenSeries.getData().add(new XYChart.Data<>(i, greenHistogram[i]));
-            blueSeries.getData().add(new XYChart.Data<>(i, blueHistogram[i]));
-
-        }
-        redSeries.setName("Red");
-        greenSeries.setName("Green");
-        blueSeries.setName("Blue");
-        histogramChart.getData().add(redSeries);
-        histogramChart.getData().add(blueSeries);
-        histogramChart.getData().add(greenSeries);
+        histogramAndColorPalette(newImage);
     }
 
     public void simple(String imagePath) {
@@ -192,7 +98,50 @@ public class QuantizationResultController {
         Image result = SwingFXUtils.toFXImage(newImage, null);
         imageView.setImage(result);
         originalImage.setImage(image);
+        histogramAndColorPalette(newImage);
+    }
 
+    public void goBack(ActionEvent event) throws IOException {
+        root = FXMLLoader.load(getClass().getResource("/main/resources/fxml/Main.fxml"));
+        stage = (Stage) ((Node)event.getSource()).getScene().getWindow();
+        scene = new Scene(root);
+        stage.setScene(scene);
+        stage.show();
+    }
+
+    public void save(ActionEvent event) throws IOException {
+        Image image = imageView.getImage();
+        if(image != null){
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.setInitialDirectory(new File ("C:\\Users\\ASUS\\Desktop\\University\\4-Th Year\\Chapter 2\\Multimedia\\multimedia-project\\src\\main\\resources\\images"));
+            FileChooser.ExtensionFilter imageFilter = new FileChooser.ExtensionFilter("Image Files", "*.jpg", "*.png");
+            fileChooser.getExtensionFilters().add(imageFilter);
+            File file = fileChooser.showSaveDialog(null);
+            if(file != null) {
+                ImageIO.write(SwingFXUtils.fromFXImage(image, null), "png", file);
+                root = FXMLLoader.load(getClass().getResource("/main/resources/fxml/Main.fxml"));
+                stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+                scene = new Scene(root);
+                stage.setScene(scene);
+                stage.show();
+            }
+        } else {
+            System.out.println("There is no Image");
+        }
+    }
+
+    public void IndexedImage() throws  IOException{
+        Image image = imageView.getImage();
+        BufferedImage original = SwingFXUtils.fromFXImage(image, null);
+
+        ImageConverter converter = new ImageConverter();
+        // you can change the number of color you want;
+        BufferedImage indexedImage = converter.convertToIndexed(original , 256);
+        Image result = SwingFXUtils.toFXImage(indexedImage, null);
+        imageView.setImage(result);
+    }
+
+    public void histogramAndColorPalette(BufferedImage newImage){
         for (int y = 0; y < newImage.getHeight(); y++) {
             for (int x = 0; x < newImage.getWidth(); x++) {
                 //Retrieving contents of a pixel
@@ -240,46 +189,6 @@ public class QuantizationResultController {
         histogramChart.getData().add(redSeries);
         histogramChart.getData().add(blueSeries);
         histogramChart.getData().add(greenSeries);
-    }
-
-    public void goBack(ActionEvent event) throws IOException {
-        root = FXMLLoader.load(getClass().getResource("/main/resources/fxml/Main.fxml"));
-        stage = (Stage) ((Node)event.getSource()).getScene().getWindow();
-        scene = new Scene(root);
-        stage.setScene(scene);
-        stage.show();
-    }
-
-    public void save(ActionEvent event) throws IOException {
-        Image image = imageView.getImage();
-        if(image != null){
-            FileChooser fileChooser = new FileChooser();
-            fileChooser.setInitialDirectory(new File ("C:\\Users\\Twfek Ajeneh\\Pictures\\main profile picture"));
-            FileChooser.ExtensionFilter imageFilter = new FileChooser.ExtensionFilter("Image Files", "*.jpg", "*.png");
-            fileChooser.getExtensionFilters().add(imageFilter);
-            File file = fileChooser.showSaveDialog(null);
-            if(file != null) {
-                ImageIO.write(SwingFXUtils.fromFXImage(image, null), "png", file);
-                root = FXMLLoader.load(getClass().getResource("/main/resources/fxml/Main.fxml"));
-                stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-                scene = new Scene(root);
-                stage.setScene(scene);
-                stage.show();
-            }
-        } else {
-            System.out.println("There is no Image");
-        }
-    }
-
-    public void IndexedImage() throws  IOException{
-        Image image = imageView.getImage();
-        BufferedImage original = SwingFXUtils.fromFXImage(image, null);
-
-        ImageConverter converter = new ImageConverter();
-        // you can change the number of color you want;
-        BufferedImage indexedImage = converter.convertToIndexed(original , 256);
-        Image result = SwingFXUtils.toFXImage(indexedImage, null);
-        imageView.setImage(result);
     }
 
 }
