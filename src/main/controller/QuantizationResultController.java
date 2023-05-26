@@ -91,7 +91,7 @@ public class QuantizationResultController {
             }
         });
         for(Color color : palette){
-            colorPalette.getItems().add(new Rectangle(290 , 30 , javafx.scene.paint.Color.rgb(color.getRed() , color.getGreen() , color.getBlue())));
+            colorPalette.getItems().add(new Rectangle(270 , 30 , javafx.scene.paint.Color.rgb(color.getRed() , color.getGreen() , color.getBlue())));
         }
         XYChart.Series<Number, Number> redSeries = new XYChart.Series<>();
         XYChart.Series<Number, Number> greenSeries = new XYChart.Series<>();
@@ -149,7 +149,7 @@ public class QuantizationResultController {
             }
         });
         for(Color color : palette){
-            colorPalette.getItems().add(new Rectangle(290 , 30 , javafx.scene.paint.Color.rgb(color.getRed() , color.getGreen() , color.getBlue())));
+            colorPalette.getItems().add(new Rectangle(270 , 30 , javafx.scene.paint.Color.rgb(color.getRed() , color.getGreen() , color.getBlue())));
         }
         XYChart.Series<Number, Number> redSeries = new XYChart.Series<>();
         XYChart.Series<Number, Number> greenSeries = new XYChart.Series<>();
@@ -222,7 +222,7 @@ public class QuantizationResultController {
             }
         });
         for(Color color : palette){
-            colorPalette.getItems().add(new Rectangle(290 , 30 , javafx.scene.paint.Color.rgb(color.getRed() , color.getGreen() , color.getBlue())));
+            colorPalette.getItems().add(new Rectangle(270 , 30 , javafx.scene.paint.Color.rgb(color.getRed() , color.getGreen() , color.getBlue())));
         }
         XYChart.Series<Number, Number> redSeries = new XYChart.Series<>();
         XYChart.Series<Number, Number> greenSeries = new XYChart.Series<>();
@@ -254,16 +254,18 @@ public class QuantizationResultController {
         Image image = imageView.getImage();
         if(image != null){
             FileChooser fileChooser = new FileChooser();
-            fileChooser.setInitialDirectory(new File ("C:\\Users\\ASUS\\Desktop\\University\\4-Th Year\\Chapter 2\\Multimedia\\multimedia-project\\src\\main\\resources\\img"));
+            fileChooser.setInitialDirectory(new File ("C:\\Users\\Twfek Ajeneh\\Pictures\\main profile picture"));
             FileChooser.ExtensionFilter imageFilter = new FileChooser.ExtensionFilter("Image Files", "*.jpg", "*.png");
             fileChooser.getExtensionFilters().add(imageFilter);
             File file = fileChooser.showSaveDialog(null);
-            ImageIO.write(SwingFXUtils.fromFXImage(image , null), "png", file);
-            root = FXMLLoader.load(getClass().getResource("/main/resources/fxml/Main.fxml"));
-            stage = (Stage) ((Node)event.getSource()).getScene().getWindow();
-            scene = new Scene(root);
-            stage.setScene(scene);
-            stage.show();
+            if(file != null) {
+                ImageIO.write(SwingFXUtils.fromFXImage(image, null), "png", file);
+                root = FXMLLoader.load(getClass().getResource("/main/resources/fxml/Main.fxml"));
+                stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+                scene = new Scene(root);
+                stage.setScene(scene);
+                stage.show();
+            }
         } else {
             System.out.println("There is no Image");
         }
