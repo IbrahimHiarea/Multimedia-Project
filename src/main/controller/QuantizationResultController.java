@@ -7,8 +7,14 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.chart.AreaChart;
+import javafx.scene.chart.XYChart;
+import javafx.scene.control.ListCell;
+import javafx.scene.control.ListView;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.Pane;
+import javafx.scene.shape.Rectangle;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import main.algorithms.IndexedImage.ImageConverter;
@@ -16,11 +22,11 @@ import main.algorithms.floydSteinberg.FloydSteinberg;
 import main.algorithms.octree.Quantize;
 
 import javax.imageio.ImageIO;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 import static main.algorithms.floydSteinberg.FloydSteinberg.applyDitheredPalette;
 
@@ -30,14 +36,80 @@ public class QuantizationResultController {
     private Scene scene;
     private Parent root;
 
+    private Set<Color> palette = new HashSet<Color>();
+
+    private int[] redHistogram = new int[256];
+    private int[] greenHistogram = new int[256];
+    private int[] blueHistogram = new int[256];
+
+
+    @FXML
+    private ListView colorPalette;
+
     @FXML
     private ImageView imageView;
+
+    @FXML
+    private ImageView originalImage;
+
+    @FXML
+    private AreaChart histogramChart;
 
     public void octree(String imagePath) {
         Image image = new Image(imagePath);
         Quantize quantization = new Quantize();
         Image newImage = quantization.start(image);
         imageView.setImage(newImage);
+        originalImage.setImage(image);
+        BufferedImage bufferedImage = SwingFXUtils.fromFXImage(newImage, null);
+        for (int y = 0; y < bufferedImage.getHeight(); y++) {
+            for (int x = 0; x < bufferedImage.getWidth(); x++) {
+                //Retrieving contents of a pixel
+                int pixel = bufferedImage.getRGB(x, y);
+                //Creating a Color object from pixel value
+                Color color = new Color(pixel, true);
+                redHistogram[color.getRed()]++;
+                greenHistogram[color.getGreen()]++;
+                blueHistogram[color.getBlue()]++;
+                palette.add(color);
+            }
+        }
+
+        colorPalette.setCellFactory(list -> new ListCell<Rectangle>() {
+            private final Pane pane = new Pane();
+
+            @Override
+            protected void updateItem(Rectangle item, boolean empty) {
+                super.updateItem(item, empty);
+
+                if (empty || item == null) {
+                    setGraphic(null);
+                } else {
+                    pane.getChildren().setAll(item);
+                    setGraphic(pane);
+                }
+            }
+        });
+        for(Color color : palette){
+            colorPalette.getItems().add(new Rectangle(290 , 30 , javafx.scene.paint.Color.rgb(color.getRed() , color.getGreen() , color.getBlue())));
+        }
+        XYChart.Series<Number, Number> redSeries = new XYChart.Series<>();
+        XYChart.Series<Number, Number> greenSeries = new XYChart.Series<>();
+        XYChart.Series<Number, Number> blueSeries = new XYChart.Series<>();
+
+        for(int i = 0; i < 255 ; i++){
+            redSeries.getData().add(new XYChart.Data<>(i , redHistogram[i]));
+            greenSeries.getData().add(new XYChart.Data<>(i, greenHistogram[i]));
+            blueSeries.getData().add(new XYChart.Data<>(i, blueHistogram[i]));
+
+        }
+        redSeries.setName("Red");
+        greenSeries.setName("Green");
+        blueSeries.setName("Blue");
+        histogramChart.getData().add(redSeries);
+        histogramChart.getData().add(blueSeries);
+        histogramChart.getData().add(greenSeries);
+
     }
 
     public void floydSteinberg(String imagePath) {
@@ -47,6 +119,54 @@ public class QuantizationResultController {
         BufferedImage newImage = applyDitheredPalette(original, floyed.PALETTE);
         Image result = SwingFXUtils.toFXImage(newImage, null);
         imageView.setImage(result);
+        originalImage.setImage(image);
+        for (int y = 0; y < newImage.getHeight(); y++) {
+            for (int x = 0; x < newImage.getWidth(); x++) {
+                //Retrieving contents of a pixel
+                int pixel = newImage.getRGB(x, y);
+                //Creating a Color object from pixel value
+                Color color = new Color(pixel, true);
+                redHistogram[color.getRed()]++;
+                greenHistogram[color.getGreen()]++;
+                blueHistogram[color.getBlue()]++;
+                palette.add(color);
+            }
+        }
+
+        colorPalette.setCellFactory(list -> new ListCell<Rectangle>() {
+            private final Pane pane = new Pane();
+
+            @Override
+            protected void updateItem(Rectangle item, boolean empty) {
+                super.updateItem(item, empty);
+
+                if (empty || item == null) {
+                    setGraphic(null);
+                } else {
+                    pane.getChildren().setAll(item);
+                    setGraphic(pane);
+                }
+            }
+        });
+        for(Color color : palette){
+            colorPalette.getItems().add(new Rectangle(290 , 30 , javafx.scene.paint.Color.rgb(color.getRed() , color.getGreen() , color.getBlue())));
+        }
+        XYChart.Series<Number, Number> redSeries = new XYChart.Series<>();
+        XYChart.Series<Number, Number> greenSeries = new XYChart.Series<>();
+        XYChart.Series<Number, Number> blueSeries = new XYChart.Series<>();
+
+        for(int i = 0; i < 255 ; i++){
+            redSeries.getData().add(new XYChart.Data<>(i, redHistogram[i]));
+            greenSeries.getData().add(new XYChart.Data<>(i, greenHistogram[i]));
+            blueSeries.getData().add(new XYChart.Data<>(i, blueHistogram[i]));
+
+        }
+        redSeries.setName("Red");
+        greenSeries.setName("Green");
+        blueSeries.setName("Blue");
+        histogramChart.getData().add(redSeries);
+        histogramChart.getData().add(blueSeries);
+        histogramChart.getData().add(greenSeries);
     }
 
     public void simple(String imagePath) {
@@ -71,6 +191,55 @@ public class QuantizationResultController {
         }
         Image result = SwingFXUtils.toFXImage(newImage, null);
         imageView.setImage(result);
+        originalImage.setImage(image);
+
+        for (int y = 0; y < newImage.getHeight(); y++) {
+            for (int x = 0; x < newImage.getWidth(); x++) {
+                //Retrieving contents of a pixel
+                int pixel = newImage.getRGB(x, y);
+                //Creating a Color object from pixel value
+                Color color = new Color(pixel, true);
+                redHistogram[color.getRed()]++;
+                greenHistogram[color.getGreen()]++;
+                blueHistogram[color.getBlue()]++;
+                palette.add(color);
+            }
+        }
+
+        colorPalette.setCellFactory(list -> new ListCell<Rectangle>() {
+            private final Pane pane = new Pane();
+
+            @Override
+            protected void updateItem(Rectangle item, boolean empty) {
+                super.updateItem(item, empty);
+
+                if (empty || item == null) {
+                    setGraphic(null);
+                } else {
+                    pane.getChildren().setAll(item);
+                    setGraphic(pane);
+                }
+            }
+        });
+        for(Color color : palette){
+            colorPalette.getItems().add(new Rectangle(290 , 30 , javafx.scene.paint.Color.rgb(color.getRed() , color.getGreen() , color.getBlue())));
+        }
+        XYChart.Series<Number, Number> redSeries = new XYChart.Series<>();
+        XYChart.Series<Number, Number> greenSeries = new XYChart.Series<>();
+        XYChart.Series<Number, Number> blueSeries = new XYChart.Series<>();
+
+        for(int i = 0; i < 255 ; i++){
+            redSeries.getData().add(new XYChart.Data<>(i, redHistogram[i]));
+            greenSeries.getData().add(new XYChart.Data<>(i , greenHistogram[i]));
+            blueSeries.getData().add(new XYChart.Data<>(i , blueHistogram[i]));
+
+        }
+        redSeries.setName("Red");
+        greenSeries.setName("Green");
+        blueSeries.setName("Blue");
+        histogramChart.getData().add(redSeries);
+        histogramChart.getData().add(blueSeries);
+        histogramChart.getData().add(greenSeries);
     }
 
     public void goBack(ActionEvent event) throws IOException {
@@ -85,7 +254,7 @@ public class QuantizationResultController {
         Image image = imageView.getImage();
         if(image != null){
             FileChooser fileChooser = new FileChooser();
-            fileChooser.setInitialDirectory(new File ("C:\\Users\\Twfek Ajeneh\\Downloads"));
+            fileChooser.setInitialDirectory(new File ("C:\\Users\\ASUS\\Desktop\\University\\4-Th Year\\Chapter 2\\Multimedia\\multimedia-project\\src\\main\\resources\\img"));
             FileChooser.ExtensionFilter imageFilter = new FileChooser.ExtensionFilter("Image Files", "*.jpg", "*.png");
             fileChooser.getExtensionFilters().add(imageFilter);
             File file = fileChooser.showSaveDialog(null);
