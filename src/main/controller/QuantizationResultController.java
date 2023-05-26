@@ -131,7 +131,7 @@ public class QuantizationResultController {
     }
 
     public void IndexedImage() throws  IOException{
-        Image image = imageView.getImage();
+        Image image = originalImage.getImage();
         BufferedImage original = SwingFXUtils.fromFXImage(image, null);
 
         ImageConverter converter = new ImageConverter();
