@@ -2,18 +2,17 @@ package main.algorithms.imageSearch;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.nio.Buffer;
 import java.util.ArrayList;
 import java.util.Comparator;
 
 public class ImageColorSearch {
 
-    public ArrayList<BufferedImage> start(ArrayList<BufferedImage> images , BufferedImage target){
-        ArrayList<Double> targetColor = getRatio(target);
+    public ArrayList<BufferedImage> start(ArrayList<BufferedImage> images , BufferedImage target , ArrayList<Color> colors){
+        ArrayList<Double> targetColor = getRatio(target , colors);
         ArrayList<ArrayList<Double>> imagesColor = new ArrayList<>();
         for (int i = 0 ; i < images.size() ; i++) {
-            ArrayList<Double> templist = getRatio(images.get(i));
-            templist.add(new Double(i));
+            ArrayList<Double> templist = getRatio(images.get(i) , new ArrayList<Color>());
+            templist.add((double)(i));
             imagesColor.add(templist);
         }
 
@@ -62,7 +61,7 @@ public class ImageColorSearch {
     }
 
 
-    public ArrayList<Double> getRatio(BufferedImage image){
+    public ArrayList<Double> getRatio(BufferedImage image , ArrayList<Color> colors){
         ArrayList<Double> list = new ArrayList<>();
         double totalRed = 0 , totalBlue = 0 , totalGreen = 0;
         for (int i = 0 ; i < image.getWidth() ; i++){
@@ -73,6 +72,11 @@ public class ImageColorSearch {
                 totalGreen+=color.getGreen();
                 totalBlue+=color.getBlue();
             }
+        }
+        for (Color color : colors){
+            totalRed+=color.getRed();
+            totalGreen+=color.getGreen();
+            totalBlue+=color.getBlue();
         }
         list.add(totalRed);
         list.add(totalGreen);

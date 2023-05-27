@@ -28,8 +28,8 @@
       <Label layoutX="100.0" layoutY="434.0" text="Choose Colors : " />
       <DatePicker fx:id="datePicker" layoutX="283.0" layoutY="461.0" onAction="#selectDate" promptText="Enter a date" />
       <Label layoutX="283.0" layoutY="434.0" text="Choose Date : " />
-      <TextField fx:id="widthField" layoutX="497.0" layoutY="461.0" onAction="#selectWidth" prefHeight="26.0" prefWidth="78.0" />
-      <TextField fx:id="heightField" layoutX="601.0" layoutY="461.0" onAction="#selectHeight" prefHeight="26.0" prefWidth="78.0" />
+      <TextField fx:id="widthField" layoutX="497.0" layoutY="461.0" prefHeight="26.0" prefWidth="78.0" />
+      <TextField fx:id="heightField" layoutX="601.0" layoutY="461.0"  prefHeight="26.0" prefWidth="78.0" />
       <Label layoutX="497.0" layoutY="434.0" text="Width :" />
       <Label layoutX="601.0" layoutY="434.0" text="Height :" />
       <Button layoutX="666.0" layoutY="546.0" mnemonicParsing="false" onAction="#submit" prefHeight="40.0" prefWidth="120.0" style="-fx-background-color: #005757;" text="Submit" textAlignment="CENTER" textFill="WHITE">
