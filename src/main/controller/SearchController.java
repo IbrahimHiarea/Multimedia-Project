@@ -55,7 +55,7 @@ public class SearchController {
 
     public void selectImage(ActionEvent event) {
         FileChooser fileChooser = new FileChooser();
-        fileChooser.setInitialDirectory(new File("C:\\Users\\ASUS\\Desktop\\University\\4-Th Year\\Chapter 2\\Multimedia\\multimedia-project\\src\\main\\resources\\images"));
+        fileChooser.setInitialDirectory(new File("C:\\Users\\Twfek Ajeneh\\Pictures\\main profile picture"));
         FileChooser.ExtensionFilter imageFilter = new FileChooser.ExtensionFilter("Image Files", "*.jpg", "*.png");
         fileChooser.getExtensionFilters().add(imageFilter);
         File file = fileChooser.showOpenDialog(null);
@@ -71,7 +71,7 @@ public class SearchController {
 
     public void selectDirectory(ActionEvent event){
         DirectoryChooser directoryChooser = new DirectoryChooser();
-        directoryChooser.setInitialDirectory(new File("C:\\Users\\ASUS\\Desktop\\University\\4-Th Year\\Chapter 2\\Multimedia\\multimedia-project\\src\\main\\resources\\images"));
+        directoryChooser.setInitialDirectory(new File("C:\\Users\\Twfek Ajeneh\\Pictures\\main profile picture"));
         File directory = directoryChooser.showDialog(null);
         if(directory != null){
             directoryList.getItems().add(directory.getAbsolutePath());
