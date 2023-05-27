@@ -55,7 +55,7 @@ public class SearchController {
 
     public void selectImage(ActionEvent event) {
         FileChooser fileChooser = new FileChooser();
-        fileChooser.setInitialDirectory(new File("C:\\Users\\Twfek Ajeneh\\Pictures\\main profile picture"));
+        fileChooser.setInitialDirectory(new File("C:\\\\Users\\\\ASUS\\\\Desktop\\\\University\\\\4-Th Year\\\\Chapter 2\\\\Multimedia\\\\multimedia-project\\\\src\\\\main\\\\resources\\\\images"));
         FileChooser.ExtensionFilter imageFilter = new FileChooser.ExtensionFilter("Image Files", "*.jpg", "*.png");
         fileChooser.getExtensionFilters().add(imageFilter);
         File file = fileChooser.showOpenDialog(null);
@@ -71,7 +71,7 @@ public class SearchController {
 
     public void selectDirectory(ActionEvent event){
         DirectoryChooser directoryChooser = new DirectoryChooser();
-        directoryChooser.setInitialDirectory(new File("C:\\Users\\Twfek Ajeneh\\Pictures\\main profile picture"));
+        directoryChooser.setInitialDirectory(new File("C:\\\\Users\\\\ASUS\\\\Desktop\\\\University\\\\4-Th Year\\\\Chapter 2\\\\Multimedia\\\\multimedia-project\\\\src\\\\main\\\\resources\\\\images"));
         File directory = directoryChooser.showDialog(null);
         if(directory != null){
             directoryList.getItems().add(directory.getAbsolutePath());
@@ -119,7 +119,7 @@ public class SearchController {
             root = loader.load();
             SearchResultController searchResultController = loader.getController();
 
-            searchResultController.SearchResult(imagePath , directories , colors , date , width , height);
+            searchResultController.SearchResult(imagePath , directories , colors , date , (widthField.getText() == null ? 0 : width) , (heightField.getText() == null ? 0 : height));
 
             stage = (Stage) ((Node)event.getSource()).getScene().getWindow();
             scene = new Scene(root);
