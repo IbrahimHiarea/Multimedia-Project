@@ -24,5 +24,11 @@ public class MainController {
         stage.show();
     }
 
-
+    public void Search(ActionEvent event) throws IOException {
+        root = FXMLLoader.load(getClass().getResource("/main/resources/fxml/Search.fxml"));
+        stage = (Stage) ((Node)event.getSource()).getScene().getWindow();
+        scene = new Scene(root);
+        stage.setScene(scene);
+        stage.show();
+    }
 }

@@ -22,7 +22,7 @@
             <Cursor fx:constant="HAND" />
          </cursor>
       </Button>
-      <Button layoutX="437.0" layoutY="356.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="200.0" style="-fx-background-color: #9900cc;" text="Search" textAlignment="CENTER" textFill="WHITE">
+      <Button layoutX="437.0" layoutY="356.0" mnemonicParsing="false" onAction="#Search" prefHeight="50.0" prefWidth="200.0" style="-fx-background-color: #9900cc;" text="Search" textAlignment="CENTER" textFill="WHITE">
          <font>
             <Font size="18.0" />
          </font>

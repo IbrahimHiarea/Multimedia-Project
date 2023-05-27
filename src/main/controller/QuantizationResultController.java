@@ -9,6 +9,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.chart.AreaChart;
 import javafx.scene.chart.XYChart;
+import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.image.Image;
@@ -54,6 +55,9 @@ public class QuantizationResultController {
     @FXML
     private AreaChart histogramChart;
 
+    @FXML
+    private Label newImageLabel;
+
     public void octree(String imagePath) {
         Image image = new Image(imagePath);
         Quantize quantization = new Quantize();
@@ -62,6 +66,7 @@ public class QuantizationResultController {
         originalImage.setImage(image);
         BufferedImage bufferedImage = SwingFXUtils.fromFXImage(newImage, null);
         histogramAndColorPalette(bufferedImage);
+        newImageLabel.setText("Octree Image : ");
     }
 
     public void floydSteinberg(String imagePath) {
@@ -73,6 +78,8 @@ public class QuantizationResultController {
         imageView.setImage(result);
         originalImage.setImage(image);
         histogramAndColorPalette(newImage);
+        newImageLabel.setText("floyd Steinberg Image : ");
+
     }
 
     public void simple(String imagePath) {
@@ -99,6 +106,7 @@ public class QuantizationResultController {
         imageView.setImage(result);
         originalImage.setImage(image);
         histogramAndColorPalette(newImage);
+        newImageLabel.setText("Simple Algorithm Image : ");
     }
 
     public void goBack(ActionEvent event) throws IOException {
@@ -139,6 +147,7 @@ public class QuantizationResultController {
         BufferedImage indexedImage = converter.convertToIndexed(original , 256);
         Image result = SwingFXUtils.toFXImage(indexedImage, null);
         imageView.setImage(result);
+        newImageLabel.setText("Indexed Image : ");
     }
 
     public void histogramAndColorPalette(BufferedImage newImage){
