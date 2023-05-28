@@ -7,11 +7,11 @@ import java.util.Comparator;
 
 public class ImageColorSearch {
 
-    public ArrayList<BufferedImage> start(ArrayList<BufferedImage> images , BufferedImage target , ArrayList<Color> colors){
-        ArrayList<Double> targetColor = getRatio(target , colors);
+    public ArrayList<BufferedImage> start(ArrayList<BufferedImage> images , BufferedImage target , ArrayList<Color> colors , int x1 , int y1 , int x2 , int y2){
+        ArrayList<Double> targetColor = getRatio(target , colors , x1 , y1 , x2 , y2);
         ArrayList<ArrayList<Double>> imagesColor = new ArrayList<>();
         for (int i = 0 ; i < images.size() ; i++) {
-            ArrayList<Double> templist = getRatio(images.get(i) , new ArrayList<Color>());
+            ArrayList<Double> templist = getRatio(images.get(i) , new ArrayList<Color>() , -1 , -1 , -1 , -1);
             templist.add((double)(i));
             imagesColor.add(templist);
         }
@@ -61,11 +61,18 @@ public class ImageColorSearch {
     }
 
 
-    public ArrayList<Double> getRatio(BufferedImage image , ArrayList<Color> colors){
+    public ArrayList<Double> getRatio(BufferedImage image , ArrayList<Color> colors , int x1 , int y1 , int x2 , int y2){
         ArrayList<Double> list = new ArrayList<>();
         double totalRed = 0 , totalBlue = 0 , totalGreen = 0;
-        for (int i = 0 ; i < image.getWidth() ; i++){
-            for (int j = 0; j < image.getHeight() ; j++){
+        int w1 = 0 , w2 = image.getWidth() , h1 = 0 , h2 = image.getHeight();
+        if(x1 != -1){
+            w1 = Math.max(0 , x1);
+            w2 = Math.min(image.getWidth() , x2);
+            h1 = Math.max(0 , y1);
+            h2 = Math.min(image.getWidth() , y2);
+        }
+        for (int i = w1 ; i < w2 ; i++){
+            for (int j = h1; j < h2 ; j++){
                 int rgb = image.getRGB(i , j);
                 Color color = new Color(rgb , true);
                 totalRed+=color.getRed();

@@ -121,7 +121,7 @@ public class QuantizationResultController {
         Image image = imageView.getImage();
         if(image != null){
             FileChooser fileChooser = new FileChooser();
-            fileChooser.setInitialDirectory(new File ("C:\\Users\\Twfek Ajeneh\\Desktop\\Collage\\Forth year\\Chapter two\\Practical\\Multimedia\\multimedia-project\\src\\main\\resources\\images\\search"));
+            fileChooser.setInitialDirectory(new File ("C:\\Users\\ASUS\\Desktop\\University\\4-Th Year\\Chapter 2\\Multimedia\\multimedia-project\\src\\main\\resources\\images"));
             FileChooser.ExtensionFilter imageFilter = new FileChooser.ExtensionFilter("Image Files", "*.jpg", "*.png");
             fileChooser.getExtensionFilters().add(imageFilter);
             File file = fileChooser.showSaveDialog(null);

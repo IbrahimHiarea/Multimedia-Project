@@ -8,9 +8,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.ColorPicker;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.ListView;
+import javafx.scene.control.*;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -51,12 +50,34 @@ public class SearchController {
     @FXML
     private TextField heightField;
 
+    @FXML
+    private CheckBox cut;
+
+    @FXML
+    private Label imageWidth;
+
+    @FXML
+    private Label imageHeight;
+
+    @FXML
+    private TextField x1Field;
+
+    @FXML
+    private TextField y1Field;
+
+    @FXML
+    private TextField x2Field;
+
+    @FXML
+    private TextField y2Field;
+
     private String imagePath = "";
     private ArrayList<String> directories = new ArrayList<>();
     private ArrayList<Color> colors = new ArrayList<>();
     private Date date = new Date(1000000000);
     private int width = -1;
     private int height = -1;
+    private int x1 = -1 , y1 = -1 , x2 = -1 , y2 = -1;
 
     public void initialize() {
         widthField.textProperty().addListener(new ChangeListener<String>() {
@@ -80,11 +101,55 @@ public class SearchController {
                     height = Integer.parseInt(value);
             }
         });
+
+        x1Field.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue,
+                                String newValue) {
+                String value = newValue.replaceAll("[^\\d]", "");
+                x1Field.setText(value);
+                if(value.compareTo("")!=0)
+                    x1 = Integer.parseInt(value);
+            }
+        });
+
+        y1Field.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue,
+                                String newValue) {
+                String value = newValue.replaceAll("[^\\d]", "");
+                y1Field.setText(value);
+                if(value.compareTo("")!=0)
+                    y1 = Integer.parseInt(value);
+            }
+        });
+
+        x2Field.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue,
+                                String newValue) {
+                String value = newValue.replaceAll("[^\\d]", "");
+                x2Field.setText(value);
+                if(value.compareTo("")!=0)
+                    x2 = Integer.parseInt(value);
+            }
+        });
+
+        y2Field.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue,
+                                String newValue) {
+                String value = newValue.replaceAll("[^\\d]", "");
+                y2Field.setText(value);
+                if(value.compareTo("")!=0)
+                    y2 = Integer.parseInt(value);
+            }
+        });
     }
 
     public void selectImage(ActionEvent event) {
         FileChooser fileChooser = new FileChooser();
-        fileChooser.setInitialDirectory(new File("C:\\Users\\Twfek Ajeneh\\Desktop\\Collage\\Forth year\\Chapter two\\Practical\\Multimedia\\multimedia-project\\src\\main\\resources\\images\\search"));
+        fileChooser.setInitialDirectory(new File("C:\\Users\\ASUS\\Desktop\\University\\4-Th Year\\Chapter 2\\Multimedia\\multimedia-project\\src\\main\\resources\\images"));
         FileChooser.ExtensionFilter imageFilter = new FileChooser.ExtensionFilter("Image Files", "*.jpg", "*.png");
         fileChooser.getExtensionFilters().add(imageFilter);
         File file = fileChooser.showOpenDialog(null);
@@ -93,6 +158,8 @@ public class SearchController {
             imagePath = file.getPath();
             Image image = new Image(imagePath);
             imageView.setImage(image);
+            imageWidth.setText(imageWidth.getText() + " " + image.getWidth());
+            imageHeight.setText(imageHeight.getText() + " " + image.getHeight());
         } else {
             System.out.println("NO File");
         }
@@ -100,7 +167,7 @@ public class SearchController {
 
     public void selectDirectory(ActionEvent event){
         DirectoryChooser directoryChooser = new DirectoryChooser();
-        directoryChooser.setInitialDirectory(new File("C:\\Users\\Twfek Ajeneh\\Desktop\\Collage\\Forth year\\Chapter two\\Practical\\Multimedia\\multimedia-project\\src\\main\\resources\\images\\search"));
+        directoryChooser.setInitialDirectory(new File("C:\\Users\\ASUS\\Desktop\\University\\4-Th Year\\Chapter 2\\Multimedia\\multimedia-project\\src\\main\\resources\\images"));
         File directory = directoryChooser.showDialog(null);
         if(directory != null){
             directoryList.getItems().add(directory.getAbsolutePath());
@@ -134,13 +201,32 @@ public class SearchController {
         }
     }
 
+    public void isCut(ActionEvent event){
+        if(cut.isSelected()){
+            x1Field.setDisable(false);
+            y1Field.setDisable(false);
+            x2Field.setDisable(false);
+            y2Field.setDisable(false);
+        } else {
+            x1Field.setText("");
+            y1Field.setText("");
+            x2Field.setText("");
+            y2Field.setText("");
+            x1 = y1 = x2 = y2 = -1;
+            x1Field.setDisable(true);
+            y1Field.setDisable(true);
+            x2Field.setDisable(true);
+            y2Field.setDisable(true);
+        }
+    }
+
     public void submit(ActionEvent event) throws IOException {
         if(imageView.getImage() != null  &&  !directories.isEmpty()){
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/main/resources/fxml/SearchResult.fxml"));
             root = loader.load();
             SearchResultController searchResultController = loader.getController();
 
-            searchResultController.SearchResult(imagePath , directories , colors , date , width , height);
+            searchResultController.SearchResult(imagePath , directories , colors , date , width , height , x1 , y1 , x2 , y2);
 
             stage = (Stage) ((Node)event.getSource()).getScene().getWindow();
             scene = new Scene(root);
