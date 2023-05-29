@@ -64,26 +64,29 @@ public class ImageColorSearch {
     public ArrayList<Double> getRatio(BufferedImage image , ArrayList<Color> colors , int x1 , int y1 , int x2 , int y2){
         ArrayList<Double> list = new ArrayList<>();
         double totalRed = 0 , totalBlue = 0 , totalGreen = 0;
-        int w1 = 0 , w2 = image.getWidth() , h1 = 0 , h2 = image.getHeight();
-        if(x1 != -1){
-            w1 = Math.max(0 , x1);
-            w2 = Math.min(image.getWidth() , x2);
-            h1 = Math.max(0 , y1);
-            h2 = Math.min(image.getWidth() , y2);
-        }
-        for (int i = w1 ; i < w2 ; i++){
-            for (int j = h1; j < h2 ; j++){
-                int rgb = image.getRGB(i , j);
-                Color color = new Color(rgb , true);
+        if(colors.isEmpty()){
+            int w1 = 0 , w2 = image.getWidth() , h1 = 0 , h2 = image.getHeight();
+            if(x1 != -1){
+                w1 = Math.max(0 , x1);
+                w2 = Math.min(image.getWidth() , x2);
+                h1 = Math.max(0 , y1);
+                h2 = Math.min(image.getWidth() , y2);
+            }
+            for (int i = w1 ; i < w2 ; i++){
+                for (int j = h1; j < h2 ; j++){
+                    int rgb = image.getRGB(i , j);
+                    Color color = new Color(rgb , true);
+                    totalRed+=color.getRed();
+                    totalGreen+=color.getGreen();
+                    totalBlue+=color.getBlue();
+                }
+            }
+        } else {
+            for (Color color : colors){
                 totalRed+=color.getRed();
                 totalGreen+=color.getGreen();
                 totalBlue+=color.getBlue();
             }
-        }
-        for (Color color : colors){
-            totalRed+=color.getRed();
-            totalGreen+=color.getGreen();
-            totalBlue+=color.getBlue();
         }
         list.add(totalRed);
         list.add(totalGreen);
