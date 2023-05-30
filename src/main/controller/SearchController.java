@@ -2,6 +2,7 @@ package main.controller;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -19,6 +20,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDate;
@@ -70,6 +72,12 @@ public class SearchController {
 
     @FXML
     private TextField y2Field;
+
+    @FXML
+    private TextField newWidth;
+
+    @FXML
+    private TextField newHeight;
 
     private String imagePath = "";
     private ArrayList<String> directories = new ArrayList<>();
@@ -158,8 +166,8 @@ public class SearchController {
             imagePath = file.getPath();
             Image image = new Image(imagePath);
             imageView.setImage(image);
-            imageWidth.setText(imageWidth.getText() + " " + image.getWidth());
-            imageHeight.setText(imageHeight.getText() + " " + image.getHeight());
+            imageWidth.setText("Image Width : " + image.getWidth());
+            imageHeight.setText("Image Height : " + image.getHeight());
         } else {
             System.out.println("NO File");
         }
@@ -217,6 +225,25 @@ public class SearchController {
             y1Field.setDisable(true);
             x2Field.setDisable(true);
             y2Field.setDisable(true);
+        }
+    }
+
+    public void changeDimensions(ActionEvent event){
+        if(newWidth.getText().length() > 0  &&  newHeight.getText().length() > 0){
+            int w = Integer.parseInt(newWidth.getText());
+            int h = Integer.parseInt(newHeight.getText());
+            Image image = imageView.getImage();
+            if(w > 0  &&  h > 0  &&  image != null){
+                BufferedImage bufferedImage = SwingFXUtils.fromFXImage(image, null);
+                BufferedImage newBufferedImage = new BufferedImage(w, h, bufferedImage.getType());
+                Graphics2D graphics2D = newBufferedImage.createGraphics();
+                graphics2D.drawImage(bufferedImage, 0, 0, w, h, null);
+                graphics2D.dispose();
+                Image result = SwingFXUtils.toFXImage(newBufferedImage, null);
+                imageView.setImage(result);
+                imageWidth.setText("Image Width : " + result.getWidth());
+                imageHeight.setText("Image Height : " + result.getHeight());
+            }
         }
     }
 
