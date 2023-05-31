@@ -7,14 +7,15 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.ListView;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
+import javafx.util.Pair;
 import main.algorithms.imageSearch.ImageColorSearch;
 import main.algorithms.imageSearch.ImageHistogramSearch;
 import main.algorithms.imageSearch.ImageHistogramSearch;
+import main.resources.components.CustomCell;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -60,22 +61,22 @@ public class SearchResultController {
         // image search
 //         ImageColorSearch imageSearch = new ImageColorSearch();
         ImageHistogramSearch imageSearch = new ImageHistogramSearch();
-        ArrayList<BufferedImage> result = imageSearch.start(images , targetImageBuffer , colors , x1 , y1 , x2 , y2);
+        ArrayList<Pair<Double , BufferedImage>> result = imageSearch.start(images , targetImageBuffer , colors , x1 , y1 , x2 , y2);
 
         int i = 0 , j = 0;
-        for(BufferedImage res : result){
+        for(Pair<Double , BufferedImage> res : result){
             if(j >= 3){
                 j = 0;
                 i ++;
             }
-            if(i == 2)  break;
-            Image resultImage = SwingFXUtils.toFXImage(res, null);
-            ImageView imageView = new ImageView(resultImage);
-            imageView.setFitHeight(150);
-            imageView.setFitWidth(150);
-            grid.add(imageView , j , i);
+            if(i == 3)  break;
+            Image resultImage = SwingFXUtils.toFXImage(res.getValue(), null);
+
+            CustomCell cell = new CustomCell(res.getKey().toString()+"%" , resultImage);
+            grid.add(cell, j , i);
             j++;
         }
+        grid.setVgap(50);
     }
 
     public void goBack(ActionEvent event) throws IOException {
@@ -87,3 +88,4 @@ public class SearchResultController {
     }
 
 }
+

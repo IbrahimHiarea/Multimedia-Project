@@ -110,11 +110,11 @@ public class QuantizationResultController {
         newImageLabel.setText("Simple Algorithm Image : ");
     }
 
-    public void medianCut(String imagePath){
+    public void medianCut(String imagePath , int maxColor){
         Image image = new Image(imagePath);
         BufferedImage original = SwingFXUtils.fromFXImage(image, null);
         MedianCut medianCut = new MedianCut();
-        BufferedImage newImage = medianCut.apply(original , 20);
+        BufferedImage newImage = medianCut.apply(original , maxColor);
         Image result = SwingFXUtils.toFXImage(newImage, null);
         imageView.setImage(result);
         originalImage.setImage(image);

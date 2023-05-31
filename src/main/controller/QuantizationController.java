@@ -1,5 +1,7 @@
 package main.controller;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -8,6 +10,7 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.FileChooser;
@@ -30,13 +33,17 @@ public class QuantizationController implements Initializable {
     @FXML
     private ChoiceBox<String> algorithm;
 
+    @FXML
+    private TextField maxColorField;
+
     private String[] algorithms = {"Octree" , "Floyd Steinberg" , "Simple Algorithm" , "Median Cut"};
 
     private String imagePath = "";
+    private int maxColor;
 
     public void selectImage(ActionEvent event) {
         FileChooser fileChooser = new FileChooser();
-        fileChooser.setInitialDirectory(new File ("C:\\Users\\Twfek Ajeneh\\Desktop\\Collage\\Forth year\\Chapter two\\Practical\\Multimedia\\multimedia-project\\src\\main\\resources\\images"));
+        fileChooser.setInitialDirectory(new File ("C:\\Users\\ASUS\\Desktop\\University\\4-Th Year\\Chapter 2\\Multimedia\\multimedia-project\\src\\main\\resources\\images"));
         FileChooser.ExtensionFilter imageFilter = new FileChooser.ExtensionFilter("Image Files", "*.jpg", "*.png");
         fileChooser.getExtensionFilters().add(imageFilter);
         File file = fileChooser.showOpenDialog(null);
@@ -54,6 +61,26 @@ public class QuantizationController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         algorithm.setValue("Octree");
         algorithm.getItems().addAll(algorithms);
+        maxColorField.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue,
+                                String newValue) {
+                String value = newValue.replaceAll("[^\\d]", "");
+                maxColorField.setText(value);
+                if(value.compareTo("")!=0)
+                    maxColor = Integer.parseInt(value);
+            }
+        });
+        maxColorField.setDisable(true);
+    }
+
+    public void isChanged(ActionEvent event) throws IOException {
+        if(algorithm.getValue().equals("Median Cut")){
+            maxColorField.setDisable(false);
+        } else {
+            maxColorField.setText("");
+            maxColorField.setDisable(true);
+        }
     }
 
     public void submit(ActionEvent event) throws IOException {
@@ -69,7 +96,7 @@ public class QuantizationController implements Initializable {
             } else if(algorithm.getValue().equals("Simple Algorithm")){
                 quantizationResultController.simple(imagePath);
             }else if(algorithm.getValue().equals("Median Cut")){
-                quantizationResultController.medianCut(imagePath);
+                quantizationResultController.medianCut(imagePath , maxColor);
             }
 
             stage = (Stage) ((Node)event.getSource()).getScene().getWindow();

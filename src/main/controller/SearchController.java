@@ -86,6 +86,7 @@ public class SearchController {
     private int width = -1;
     private int height = -1;
     private int x1 = -1 , y1 = -1 , x2 = -1 , y2 = -1;
+    private int nWidth = -1 , nHeight = -1;
 
     public void initialize() {
         widthField.textProperty().addListener(new ChangeListener<String>() {
@@ -143,21 +144,32 @@ public class SearchController {
             }
         });
 
-        y2Field.textProperty().addListener(new ChangeListener<String>() {
+        newWidth.textProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue,
                                 String newValue) {
                 String value = newValue.replaceAll("[^\\d]", "");
-                y2Field.setText(value);
+                newWidth.setText(value);
                 if(value.compareTo("")!=0)
-                    y2 = Integer.parseInt(value);
+                    nWidth = Integer.parseInt(value);
+            }
+        });
+
+        newHeight.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue,
+                                String newValue) {
+                String value = newValue.replaceAll("[^\\d]", "");
+                newHeight.setText(value);
+                if(value.compareTo("")!=0)
+                    nHeight = Integer.parseInt(value);
             }
         });
     }
 
     public void selectImage(ActionEvent event) {
         FileChooser fileChooser = new FileChooser();
-        fileChooser.setInitialDirectory(new File("C:\\Users\\Twfek Ajeneh\\Desktop\\Collage\\Forth year\\Chapter two\\Practical\\Multimedia\\multimedia-project\\src\\main\\resources\\images"));
+        fileChooser.setInitialDirectory(new File("C:\\Users\\ASUS\\Desktop\\University\\4-Th Year\\Chapter 2\\Multimedia\\multimedia-project\\src\\main\\resources\\images"));
         FileChooser.ExtensionFilter imageFilter = new FileChooser.ExtensionFilter("Image Files", "*.jpg", "*.png");
         fileChooser.getExtensionFilters().add(imageFilter);
         File file = fileChooser.showOpenDialog(null);
@@ -175,7 +187,7 @@ public class SearchController {
 
     public void selectDirectory(ActionEvent event){
         DirectoryChooser directoryChooser = new DirectoryChooser();
-        directoryChooser.setInitialDirectory(new File("C:\\Users\\Twfek Ajeneh\\Desktop\\Collage\\Forth year\\Chapter two\\Practical\\Multimedia\\multimedia-project\\src\\main\\resources\\images"));
+        directoryChooser.setInitialDirectory(new File("C:\\Users\\ASUS\\Desktop\\University\\4-Th Year\\Chapter 2\\Multimedia\\multimedia-project\\src\\main\\resources\\images"));
         File directory = directoryChooser.showDialog(null);
         if(directory != null){
             directoryList.getItems().add(directory.getAbsolutePath());
@@ -229,21 +241,18 @@ public class SearchController {
     }
 
     public void changeDimensions(ActionEvent event){
-        if(newWidth.getText().length() > 0  &&  newHeight.getText().length() > 0){
-            int w = Integer.parseInt(newWidth.getText());
-            int h = Integer.parseInt(newHeight.getText());
-            Image image = imageView.getImage();
-            if(w > 0  &&  h > 0  &&  image != null){
-                BufferedImage bufferedImage = SwingFXUtils.fromFXImage(image, null);
-                BufferedImage newBufferedImage = new BufferedImage(w, h, bufferedImage.getType());
-                Graphics2D graphics2D = newBufferedImage.createGraphics();
-                graphics2D.drawImage(bufferedImage, 0, 0, w, h, null);
-                graphics2D.dispose();
-                Image result = SwingFXUtils.toFXImage(newBufferedImage, null);
-                imageView.setImage(result);
-                imageWidth.setText("Image Width : " + result.getWidth());
-                imageHeight.setText("Image Height : " + result.getHeight());
-            }
+        Image image = imageView.getImage();
+        if(nWidth > 0  &&  nHeight > 0  &&  image != null){
+            BufferedImage bufferedImage = SwingFXUtils.fromFXImage(image, null);
+            BufferedImage newBufferedImage = new BufferedImage(nWidth, nHeight, bufferedImage.getType());
+            Graphics2D graphics2D = newBufferedImage.createGraphics();
+            graphics2D.drawImage(bufferedImage, 0, 0, nWidth, nHeight, null);
+            graphics2D.dispose();
+            Image result = SwingFXUtils.toFXImage(newBufferedImage, null);
+            imageView.setImage(result);
+            imageWidth.setText("Image Width : " + result.getWidth());
+            imageHeight.setText("Image Height : " + result.getHeight());
+
         }
     }
 

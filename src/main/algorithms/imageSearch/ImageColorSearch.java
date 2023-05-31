@@ -66,7 +66,7 @@ public class ImageColorSearch {
         double totalRed = 0 , totalBlue = 0 , totalGreen = 0;
         if(colors.isEmpty()){
             int w1 = 0 , w2 = image.getWidth() , h1 = 0 , h2 = image.getHeight();
-            if(x1 != -1){
+            if(x1 != -1  &&  x2 != -1  &&  y1 != -1  &&  y2 != -1){
                 w1 = Math.max(0 , x1);
                 w2 = Math.min(image.getWidth() , x2);
                 h1 = Math.max(0 , y1);

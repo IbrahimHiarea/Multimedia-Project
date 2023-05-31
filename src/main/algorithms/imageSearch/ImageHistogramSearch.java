@@ -10,24 +10,36 @@ import java.util.Collections;
 import java.util.Comparator;
 
 public class ImageHistogramSearch{
-    public ArrayList<BufferedImage> start(ArrayList<BufferedImage> images , BufferedImage target , ArrayList<Color> colors , int x1 , int y1 , int x2 , int y2){
+    public ArrayList<Pair<Double , BufferedImage>> start(ArrayList<BufferedImage> images , BufferedImage target , ArrayList<Color> colors , int x1 , int y1 , int x2 , int y2){
         ArrayList<Pair<Double , BufferedImage>> similarityArray = new ArrayList<>();
 
         int[] targetRedHistogram = new int[256];
         int[] targetGreenHistogram = new int[256];
         int[] targetBlueHistogram = new int[256];
 
-        for (int i = 0; i < target.getWidth(); i++) {
-            for (int j = 0; j < target.getHeight(); j++) {
-                int redValue = target.getRaster().getSample(i, j, 0);
-                int greenValue = target.getRaster().getSample(i, j, 1);
-                int blueValue = target.getRaster().getSample(i, j, 2);
-
-                targetRedHistogram[redValue]++;
-                targetGreenHistogram[greenValue]++;
-                targetBlueHistogram[blueValue]++;
+        if(colors.isEmpty()){
+            int w1 = 0 , w2 = target.getWidth() , h1 = 0 , h2 = target.getHeight();
+            if(x1 != -1  &&  x2 != -1  &&  y1 != -1  &&  y2 != -1){
+                w1 = Math.max(0 , x1);
+                w2 = Math.min(target.getWidth() , x2);
+                h1 = Math.max(0 , y1);
+                h2 = Math.min(target.getWidth() , y2);
             }
+            for (int i = w1 ; i < w2 ; i++){
+                for (int j = h1; j < h2 ; j++){
+                    int redValue = target.getRaster().getSample(i, j, 0);
+                    int greenValue = target.getRaster().getSample(i, j, 1);
+                    int blueValue = target.getRaster().getSample(i, j, 2);
+
+                    targetRedHistogram[redValue]++;
+                    targetGreenHistogram[greenValue]++;
+                    targetBlueHistogram[blueValue]++;
+                }
+            }
+        } else {
+            // TODO: Array of Colors
         }
+
 
         int numPixels1 = target.getWidth() * target.getHeight();
 
@@ -82,13 +94,6 @@ public class ImageHistogramSearch{
             }
         });
 
-        ArrayList<BufferedImage> result = new ArrayList<>();
-
-        for (Pair<Double , BufferedImage> item : similarityArray){
-            System.out.println(item.getKey());
-            result.add(item.getValue());
-        }
-
-        return result;
+        return similarityArray;
     }
 }
