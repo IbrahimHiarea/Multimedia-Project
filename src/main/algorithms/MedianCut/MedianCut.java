@@ -10,7 +10,6 @@ import java.util.List;
 public class MedianCut{
 
     public static BufferedImage apply(BufferedImage image, int numColors) {
-        System.out.println("yes");
         List<Color> colorPalette = createColorPalette(image, numColors);
         return applyColorPalette(image, colorPalette);
     }

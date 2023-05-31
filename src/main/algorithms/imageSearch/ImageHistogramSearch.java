@@ -4,29 +4,33 @@ import javafx.util.Pair;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.nio.Buffer;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 
 public class ImageHistogramSearch{
     public ArrayList<Pair<Double , BufferedImage>> start(ArrayList<BufferedImage> images , BufferedImage target , ArrayList<Color> colors , int x1 , int y1 , int x2 , int y2){
-        ArrayList<Pair<Double , BufferedImage>> similarityArray = new ArrayList<>();
+        ArrayList<Pair<Double , BufferedImage>> result = new ArrayList<>();
+
+        int targetWidthStart = 0 , targetWidthEnd = target.getWidth();
+        int targetHeightStart = 0 , targetHeightEnd = target.getHeight();
+
+        // calc the cut
+        if(x1 >= 0 && x1 <= targetWidthEnd) targetWidthStart = x1;
+        if(x2 >= 0 && x2 <= targetWidthEnd &&  x2 > targetWidthStart) targetWidthEnd = x2;
+        if(y1 >= 0 && y1 <= targetHeightEnd) targetHeightEnd = y1;
+        if(y2 >= 0 && y2 <= targetHeightEnd && y2 > targetHeightStart) targetHeightEnd = y2;
+
+        int targetWidth = targetWidthEnd - targetWidthStart;
+        int targetHeight = targetHeightEnd - targetHeightStart;
 
         int[] targetRedHistogram = new int[256];
         int[] targetGreenHistogram = new int[256];
         int[] targetBlueHistogram = new int[256];
 
         if(colors.isEmpty()){
-            int w1 = 0 , w2 = target.getWidth() , h1 = 0 , h2 = target.getHeight();
-            if(x1 != -1  &&  x2 != -1  &&  y1 != -1  &&  y2 != -1){
-                w1 = Math.max(0 , x1);
-                w2 = Math.min(target.getWidth() , x2);
-                h1 = Math.max(0 , y1);
-                h2 = Math.min(target.getWidth() , y2);
-            }
-            for (int i = w1 ; i < w2 ; i++){
-                for (int j = h1; j < h2 ; j++){
+            for (int i = targetWidthStart ; i < targetWidthEnd ; i++){
+                for (int j = targetHeightStart; j < targetHeightEnd ; j++){
                     int redValue = target.getRaster().getSample(i, j, 0);
                     int greenValue = target.getRaster().getSample(i, j, 1);
                     int blueValue = target.getRaster().getSample(i, j, 2);
@@ -37,11 +41,19 @@ public class ImageHistogramSearch{
                 }
             }
         } else {
-            // TODO: Array of Colors
+            for (Color color : colors){
+                int redValue = color.getRed();
+                int greenValue = color.getGreen();
+                int blueValue = color.getBlue();
+
+                targetRedHistogram[redValue]++;
+                targetGreenHistogram[greenValue]++;
+                targetBlueHistogram[blueValue]++;
+            }
         }
 
 
-        int numPixels1 = target.getWidth() * target.getHeight();
+        int numPixels1 = targetWidth * targetHeight;
 
         for (int i = 0; i < targetRedHistogram.length; i++) {
             targetRedHistogram[i] = (int) Math.round((double) targetRedHistogram[i] / numPixels1 * 100);
@@ -82,18 +94,18 @@ public class ImageHistogramSearch{
                 difference += redDiff + greenDiff + blueDiff;
             }
 
-            double similarity = 1 - (difference / (3 * target.getWidth() * target.getHeight() * 255));
-
-            similarityArray.add(new Pair<>(similarity , image));
+            double similarity = 1 - (difference / (3 * targetWidth * targetHeight * 255));
+            System.out.println(similarity);
+            result.add(new Pair<>(similarity , image));
         }
 
-        Collections.sort(similarityArray, new Comparator<Pair<Double, BufferedImage>>() {
+        Collections.sort(result, new Comparator<Pair<Double, BufferedImage>>() {
             @Override
             public int compare(Pair<Double, BufferedImage> p1, Pair<Double, BufferedImage> p2) {
                 return Double.compare(p2.getKey(), p1.getKey());
             }
         });
 
-        return similarityArray;
+        return result;
     }
 }

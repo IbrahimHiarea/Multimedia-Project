@@ -36,14 +36,14 @@ public class QuantizationController implements Initializable {
     @FXML
     private TextField maxColorField;
 
-    private String[] algorithms = {"Octree" , "Floyd Steinberg" , "Simple Algorithm" , "Median Cut"};
+    private String[] algorithms = {"Octree" , "Floyd Steinberg" , "Simple Algorithm" , "Median Cut" , "K-Means"};
 
     private String imagePath = "";
-    private int maxColor;
+    private int maxColor = 10;
 
     public void selectImage(ActionEvent event) {
         FileChooser fileChooser = new FileChooser();
-        fileChooser.setInitialDirectory(new File ("C:\\Users\\ASUS\\Desktop\\University\\4-Th Year\\Chapter 2\\Multimedia\\multimedia-project\\src\\main\\resources\\images"));
+        fileChooser.setInitialDirectory(new File ("C:\\Users\\Twfek Ajeneh\\Desktop\\Collage\\Forth year\\Chapter two\\Practical\\Multimedia\\multimedia-project\\src\\main\\resources\\images"));
         FileChooser.ExtensionFilter imageFilter = new FileChooser.ExtensionFilter("Image Files", "*.jpg", "*.png");
         fileChooser.getExtensionFilters().add(imageFilter);
         File file = fileChooser.showOpenDialog(null);
@@ -75,7 +75,7 @@ public class QuantizationController implements Initializable {
     }
 
     public void isChanged(ActionEvent event) throws IOException {
-        if(algorithm.getValue().equals("Median Cut")){
+        if(algorithm.getValue().equals("Median Cut") || algorithm.getValue().equals("K-Means")){
             maxColorField.setDisable(false);
         } else {
             maxColorField.setText("");
@@ -97,6 +97,8 @@ public class QuantizationController implements Initializable {
                 quantizationResultController.simple(imagePath);
             }else if(algorithm.getValue().equals("Median Cut")){
                 quantizationResultController.medianCut(imagePath , maxColor);
+            }else if(algorithm.getValue().equals("K-Means")){
+                quantizationResultController.kMeans(imagePath , maxColor);
             }
 
             stage = (Stage) ((Node)event.getSource()).getScene().getWindow();

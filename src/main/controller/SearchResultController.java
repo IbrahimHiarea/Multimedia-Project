@@ -59,7 +59,6 @@ public class SearchResultController {
         }
 
         // image search
-//         ImageColorSearch imageSearch = new ImageColorSearch();
         ImageHistogramSearch imageSearch = new ImageHistogramSearch();
         ArrayList<Pair<Double , BufferedImage>> result = imageSearch.start(images , targetImageBuffer , colors , x1 , y1 , x2 , y2);
 
