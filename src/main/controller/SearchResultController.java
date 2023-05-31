@@ -13,6 +13,9 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import main.algorithms.imageSearch.ImageColorSearch;
+import main.algorithms.imageSearch.ImageHistogramSearch;
+import main.algorithms.imageSearch.ImageHistogramSearch;
+
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -54,9 +57,11 @@ public class SearchResultController {
             }
         }
 
-        ImageColorSearch imageSearch = new ImageColorSearch();
-
+        // image search
+//         ImageColorSearch imageSearch = new ImageColorSearch();
+        ImageHistogramSearch imageSearch = new ImageHistogramSearch();
         ArrayList<BufferedImage> result = imageSearch.start(images , targetImageBuffer , colors , x1 , y1 , x2 , y2);
+
         int i = 0 , j = 0;
         for(BufferedImage res : result){
             if(j >= 3){
