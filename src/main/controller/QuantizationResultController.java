@@ -19,6 +19,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import main.algorithms.IndexedImage.ImageConverter;
+import main.algorithms.MedianCut.MedianCut;
 import main.algorithms.floydSteinberg.FloydSteinberg;
 import main.algorithms.octree.Quantize;
 
@@ -107,6 +108,18 @@ public class QuantizationResultController {
         originalImage.setImage(image);
         histogramAndColorPalette(newImage);
         newImageLabel.setText("Simple Algorithm Image : ");
+    }
+
+    public void medianCut(String imagePath){
+        Image image = new Image(imagePath);
+        BufferedImage original = SwingFXUtils.fromFXImage(image, null);
+        MedianCut medianCut = new MedianCut();
+        BufferedImage newImage = medianCut.apply(original , 20);
+        Image result = SwingFXUtils.toFXImage(newImage, null);
+        imageView.setImage(result);
+        originalImage.setImage(image);
+        histogramAndColorPalette(newImage);
+        newImageLabel.setText("Median Cut Algorithm Image : ");
     }
 
     public void goBack(ActionEvent event) throws IOException {
