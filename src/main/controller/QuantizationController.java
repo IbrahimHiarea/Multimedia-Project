@@ -10,6 +10,7 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -36,6 +37,9 @@ public class QuantizationController implements Initializable {
     @FXML
     private TextField maxColorField;
 
+    @FXML
+    private Label maxColorLabel;
+
     private String[] algorithms = {"Octree" , "Floyd Steinberg" , "Simple Algorithm" , "Median Cut" , "K-Means"};
 
     private String imagePath = "";
@@ -43,7 +47,7 @@ public class QuantizationController implements Initializable {
 
     public void selectImage(ActionEvent event) {
         FileChooser fileChooser = new FileChooser();
-        fileChooser.setInitialDirectory(new File ("C:\\Users\\Twfek Ajeneh\\Desktop\\Collage\\Forth year\\Chapter two\\Practical\\Multimedia\\multimedia-project\\src\\main\\resources\\images"));
+        fileChooser.setInitialDirectory(new File ("C:\\Users\\ASUS\\Desktop\\University\\4-Th Year\\Chapter 2\\Multimedia\\multimedia-project\\src\\main\\resources\\images"));
         FileChooser.ExtensionFilter imageFilter = new FileChooser.ExtensionFilter("Image Files", "*.jpg", "*.png");
         fileChooser.getExtensionFilters().add(imageFilter);
         File file = fileChooser.showOpenDialog(null);
@@ -72,14 +76,17 @@ public class QuantizationController implements Initializable {
             }
         });
         maxColorField.setDisable(true);
+        maxColorLabel.setDisable(true);
     }
 
     public void isChanged(ActionEvent event) throws IOException {
         if(algorithm.getValue().equals("Median Cut") || algorithm.getValue().equals("K-Means")){
             maxColorField.setDisable(false);
+            maxColorLabel.setDisable(false);
         } else {
             maxColorField.setText("");
             maxColorField.setDisable(true);
+            maxColorLabel.setDisable(true);
         }
     }
 

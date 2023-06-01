@@ -22,9 +22,9 @@
             <Cursor fx:constant="HAND" />
          </cursor>
       </ChoiceBox>
-      <Label fx:id="algorithmLabel" layoutX="100.0" layoutY="399.0" prefHeight="34.0" prefWidth="150.0" text="Choose Algorithm : " textFill="#4e1960">
+      <Label fx:id="maxColorLabel" disable="true" layoutX="264.0" layoutY="407.0" prefHeight="34.0" prefWidth="150.0" text="The Max Number Of Colors :" textFill="#4e1960">
          <font>
-            <Font size="14.0" />
+            <Font size="10.0" />
          </font>
       </Label>
       <Button layoutX="528.0" layoutY="427.0" mnemonicParsing="false" onAction="#submit" prefHeight="40.0" prefWidth="120.0" style="-fx-background-color: #005757;" text="Submit" textAlignment="CENTER" textFill="WHITE">
