@@ -4,6 +4,7 @@ import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.image.Image;
 
 import java.awt.*;
+import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -43,6 +44,24 @@ public class ImageOperations {
         g2d.rotate(Math.toRadians(90));
         g2d.drawImage(image, 0, -h, null);
         g2d.dispose();
-        return rotated;
+        return flipHorizontal(rotated);
     }
+
+    public static BufferedImage flipHorizontal(BufferedImage image) {
+        AffineTransform tx = AffineTransform.getScaleInstance(-1, 1);
+        tx.translate(-image.getWidth(null), 0);
+        return applyTransform(tx, image);
+    }
+
+    private static BufferedImage applyTransform(AffineTransform tx, BufferedImage image) {
+        BufferedImage flippedImage = new BufferedImage(
+                image.getWidth(), image.getHeight(), BufferedImage.TYPE_INT_ARGB);
+        var g = flippedImage.createGraphics();
+        g.transform(tx);
+        g.drawImage(image, 0, 0, null);
+        g.dispose();
+        return flippedImage;
+    }
+
+
 }
