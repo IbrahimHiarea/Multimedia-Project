@@ -17,6 +17,7 @@ import main.algorithms.imageSearch.ImageHistogramSearch;
 import main.algorithms.imageSearch.ImageHistogramSearch;
 import main.resources.components.CustomCell;
 
+import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -33,7 +34,7 @@ public class SearchResultController {
     @FXML
     private GridPane grid;
 
-    public void SearchResult(String imagePath , ArrayList<String> directories , ArrayList<Color> colors , Date date , int width , int height , int x1 , int y1 , int x2 , int y2){
+    public void SearchResult(String imagePath , ArrayList<String> directories , ArrayList<Color> colors , Date date , int width , int height , int x1 , int y1 , int x2 , int y2) throws IOException {
         Image targetImage = new Image(imagePath);
         BufferedImage targetImageBuffer = SwingFXUtils.fromFXImage(targetImage, null);
         ArrayList<BufferedImage> images = new ArrayList<>();
@@ -42,8 +43,9 @@ public class SearchResultController {
             File folder = new File(dir);
             for (File file : folder.listFiles()){
                 if (file.isFile() && (file.getName().endsWith(".jpg") || file.getName().endsWith(".png"))){
-                    Image originalImage = new Image(file.getPath());
-                    BufferedImage image = SwingFXUtils.fromFXImage(originalImage, null);
+                    BufferedImage image = ImageIO.read(file);
+
+                    if(image.getType() != BufferedImage.TYPE_BYTE_INDEXED)  continue;
 
                     //filter by width and height
                     if(width >= 0 && Math.abs(width - image.getWidth()) > 100)    continue;
@@ -53,7 +55,7 @@ public class SearchResultController {
                     Date createDate = new Date(file.lastModified());
                     if(createDate.compareTo(date) < 0 ) continue;
 
-                    images.add(image);
+                    images.add(SwingFXUtils.fromFXImage(new Image(file.getPath()), null));
                 }
             }
         }

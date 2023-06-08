@@ -27,6 +27,7 @@ import main.algorithms.octree.Quantize;
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.awt.image.RenderedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
@@ -170,10 +171,16 @@ public class QuantizationResultController {
 
         ImageConverter converter = new ImageConverter();
         // you can change the number of color you want;
-        BufferedImage indexedImage = converter.convertToIndexed(original , 256);
-        Image result = SwingFXUtils.toFXImage(indexedImage, null);
-        imageView.setImage(result);
-        newImageLabel.setText("Indexed Image : ");
+        BufferedImage indexedImage = converter.convertToIndexed(original , 255);
+
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setInitialDirectory(new File ("C:\\Users\\ASUS\\Desktop\\University\\4-Th Year\\Chapter 2\\Multimedia\\multimedia-project\\src\\main\\resources\\images\\Indexed Images"));
+        FileChooser.ExtensionFilter imageFilter = new FileChooser.ExtensionFilter("Image Files", "*.jpg", "*.png");
+        fileChooser.getExtensionFilters().add(imageFilter);
+        File file = fileChooser.showSaveDialog(null);
+        if(file != null) {
+            ImageIO.write(indexedImage, "png", file);
+        }
     }
 
     public void histogramAndColorPalette(BufferedImage newImage){
