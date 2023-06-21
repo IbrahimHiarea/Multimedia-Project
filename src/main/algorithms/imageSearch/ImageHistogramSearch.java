@@ -9,17 +9,18 @@ import java.util.Collections;
 import java.util.Comparator;
 
 public class ImageHistogramSearch{
-    public ArrayList<Pair<Double , BufferedImage>> start(ArrayList<BufferedImage> images , BufferedImage target , ArrayList<Color> colors , int x1 , int y1 , int x2 , int y2){
+    public ArrayList<Pair<Double , BufferedImage>> start(ArrayList<BufferedImage> images , BufferedImage target , ArrayList<Color> colors){
         ArrayList<Pair<Double , BufferedImage>> result = new ArrayList<>();
 
         int targetWidthStart = 0 , targetWidthEnd = target.getWidth();
         int targetHeightStart = 0 , targetHeightEnd = target.getHeight();
 
-        // calc the cut
-        if(x1 >= 0 && x1 <= targetWidthEnd) targetWidthStart = x1;
-        if(x2 >= 0 && x2 <= targetWidthEnd &&  x2 > targetWidthStart) targetWidthEnd = x2;
-        if(y1 >= 0 && y1 <= targetHeightEnd) targetHeightEnd = y1;
-        if(y2 >= 0 && y2 <= targetHeightEnd && y2 > targetHeightStart) targetHeightEnd = y2;
+        System.out.println(targetWidthStart);
+        System.out.println(targetWidthEnd);
+        System.out.println(targetHeightEnd);
+        System.out.println(targetHeightEnd);
+
+
 
         int targetWidth = targetWidthEnd - targetWidthStart;
         int targetHeight = targetHeightEnd - targetHeightStart;

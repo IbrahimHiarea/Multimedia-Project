@@ -15,6 +15,9 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 //import javafx.scene.paint.Color;
+import javafx.scene.image.WritableImage;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.shape.Rectangle;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -62,22 +65,16 @@ public class SearchController {
     private Label imageHeight;
 
     @FXML
-    private TextField x1Field;
-
-    @FXML
-    private TextField y1Field;
-
-    @FXML
-    private TextField x2Field;
-
-    @FXML
-    private TextField y2Field;
-
-    @FXML
     private TextField newWidth;
 
     @FXML
     private TextField newHeight;
+
+    @FXML
+    private Rectangle cropRect;
+
+    @FXML
+    private double startX, startY;
 
     private String imagePath = "";
     private ArrayList<String> directories = new ArrayList<>();
@@ -85,7 +82,7 @@ public class SearchController {
     private Date date = new Date(1000000000);
     private int width = -1;
     private int height = -1;
-    private int x1 = -1 , y1 = -1 , x2 = -1 , y2 = -1;
+//    private int x1 = -1 , y1 = -1 , x2 = -1 , y2 = -1;
     private int nWidth = -1 , nHeight = -1;
 
     public void initialize() {
@@ -111,39 +108,6 @@ public class SearchController {
             }
         });
 
-        x1Field.textProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue,
-                                String newValue) {
-                String value = newValue.replaceAll("[^\\d]", "");
-                x1Field.setText(value);
-                if(value.compareTo("")!=0)
-                    x1 = Integer.parseInt(value);
-            }
-        });
-
-        y1Field.textProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue,
-                                String newValue) {
-                String value = newValue.replaceAll("[^\\d]", "");
-                y1Field.setText(value);
-                if(value.compareTo("")!=0)
-                    y1 = Integer.parseInt(value);
-            }
-        });
-
-        x2Field.textProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue,
-                                String newValue) {
-                String value = newValue.replaceAll("[^\\d]", "");
-                x2Field.setText(value);
-                if(value.compareTo("")!=0)
-                    x2 = Integer.parseInt(value);
-            }
-        });
-
         newWidth.textProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue,
@@ -165,6 +129,7 @@ public class SearchController {
                     nHeight = Integer.parseInt(value);
             }
         });
+
     }
 
     public void selectImage(ActionEvent event) {
@@ -223,20 +188,73 @@ public class SearchController {
 
     public void isCut(ActionEvent event){
         if(cut.isSelected()){
-            x1Field.setDisable(false);
-            y1Field.setDisable(false);
-            x2Field.setDisable(false);
-            y2Field.setDisable(false);
+            cropRect.setOpacity(1);
+            // Add event handlers to the crop rectangle
+            cropRect.setOnMousePressed(e -> {
+                startX = e.getSceneX();
+                startY = e.getSceneY();
+                e.consume();
+            });
+            cropRect.setOnMouseDragged(e -> {
+                double deltaX = e.getSceneX() - startX;
+                double deltaY = e.getSceneY() - startY;
+                cropRect.setX(cropRect.getX() + deltaX);
+                cropRect.setY(cropRect.getY() + deltaY);
+                startX = e.getSceneX();
+                startY = e.getSceneY();
+                e.consume();
+            });
+            cropRect.setOnMouseReleased(e -> {
+                e.consume();
+            });
+
+            imageView.setOnMousePressed(e -> {
+                double x = e.getX();
+                double y = e.getY();
+                cropRect.setX(x);
+                cropRect.setY(y);
+                cropRect.setWidth(0);
+                cropRect.setHeight(0);
+                e.consume();
+            });
+            imageView.setOnMouseDragged(e -> {
+                double x = e.getX();
+                double y = e.getY();
+                cropRect.setWidth(Math.abs(x - cropRect.getX()));
+                cropRect.setHeight(Math.abs(y - cropRect.getY()));
+                e.consume();
+            });
+            imageView.setOnMouseReleased(e -> {
+                double x = cropRect.getX();
+                double y = cropRect.getY();
+                double width = cropRect.getWidth();
+                double height = cropRect.getHeight();
+
+                // Crop the image using the selected rectangle
+                Image originalImage = imageView.getImage();
+
+//                x1 = (int) x;
+//                y1 = (int) y;
+//                x2 = x1 + (int) width;
+//                y2 = y2 + (int) height;
+//                System.out.println(x1);
+//                System.out.println(y1);
+//                System.out.println(x2);
+//                System.out.println(y2);
+//                System.out.println("--------------------");
+
+                WritableImage croppedImage = new WritableImage(originalImage.getPixelReader(), (int)x, (int)y, (int)width, (int)height);
+
+                // Display the cropped image
+                imageView.setImage(croppedImage);
+
+                // Reset the crop rectangle
+                cropRect.setWidth(0);
+                cropRect.setHeight(0);
+                e.consume();
+            });
         } else {
-            x1Field.setText("");
-            y1Field.setText("");
-            x2Field.setText("");
-            y2Field.setText("");
-            x1 = y1 = x2 = y2 = -1;
-            x1Field.setDisable(true);
-            y1Field.setDisable(true);
-            x2Field.setDisable(true);
-            y2Field.setDisable(true);
+            cropRect.setOpacity(0);
         }
     }
 
@@ -262,7 +280,7 @@ public class SearchController {
             root = loader.load();
             SearchResultController searchResultController = loader.getController();
 
-            searchResultController.SearchResult(imagePath , directories , colors , date , width , height , x1 , y1 , x2 , y2);
+            searchResultController.SearchResult(imageView.getImage() , directories , colors , date , width , height);
 
             stage = (Stage) ((Node)event.getSource()).getScene().getWindow();
             scene = new Scene(root);

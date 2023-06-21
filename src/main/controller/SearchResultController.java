@@ -34,8 +34,8 @@ public class SearchResultController {
     @FXML
     private GridPane grid;
 
-    public void SearchResult(String imagePath , ArrayList<String> directories , ArrayList<Color> colors , Date date , int width , int height , int x1 , int y1 , int x2 , int y2) throws IOException {
-        Image targetImage = new Image(imagePath);
+    public void SearchResult(Image CurrentImage , ArrayList<String> directories , ArrayList<Color> colors , Date date , int width , int height) throws IOException {
+        Image targetImage = CurrentImage;
         BufferedImage targetImageBuffer = SwingFXUtils.fromFXImage(targetImage, null);
         ArrayList<BufferedImage> images = new ArrayList<>();
 
@@ -62,7 +62,7 @@ public class SearchResultController {
 
         // image search
         ImageHistogramSearch imageSearch = new ImageHistogramSearch();
-        ArrayList<Pair<Double , BufferedImage>> result = imageSearch.start(images , targetImageBuffer , colors , x1 , y1 , x2 , y2);
+        ArrayList<Pair<Double , BufferedImage>> result = imageSearch.start(images , targetImageBuffer , colors);
 
         int i = 0 , j = 0;
         for(Pair<Double , BufferedImage> res : result){

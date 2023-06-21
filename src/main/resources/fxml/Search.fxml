@@ -10,10 +10,11 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.shape.Rectangle?>
 
 <AnchorPane prefHeight="600.0" prefWidth="800.0" style="-fx-background-color: #FCF6FF;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.controller.SearchController">
    <children>
-      <ImageView fx:id="imageView" fitHeight="250.0" fitWidth="250.0" layoutX="100.0" layoutY="26.0" pickOnBounds="true" preserveRatio="true" />
+      <ImageView fx:id="imageView" fitHeight="250.0" fitWidth="400.0" layoutX="25.0" layoutY="26.0" pickOnBounds="true" preserveRatio="true" />
       <Button layoutX="165.0" layoutY="299.0" mnemonicParsing="false" onAction="#selectImage" prefHeight="40.0" prefWidth="120.0" style="-fx-background-color: #9900cc;" text="Select Image" textAlignment="CENTER" textFill="WHITE">
          <cursor>
             <Cursor fx:constant="HAND" />
@@ -58,5 +59,6 @@
             <Cursor fx:constant="HAND" />
          </cursor>
       </Button>
+      <Rectangle fx:id="cropRect" arcHeight="5.0" arcWidth="5.0" fill="#1f93ff7f" height="10.0" layoutX="25.0" layoutY="26.0" opacity="0.0" stroke="#0112ff" strokeType="INSIDE" width="10.0" />
    </children>
 </AnchorPane>
